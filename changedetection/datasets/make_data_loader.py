@@ -45,6 +45,8 @@ class ChangeDetectionDatset(Dataset):
             pre_img, post_img, label = imutils.random_fliplr(pre_img, post_img, label)
             pre_img, post_img, label = imutils.random_flipud(pre_img, post_img, label)
             pre_img, post_img, label = imutils.random_rot(pre_img, post_img, label)
+            pre_img, post_img = imutils.random_color_jitter(pre_img, post_img)
+            pre_img, post_img = imutils.random_noise(pre_img, post_img)
 
         pre_img = imutils.normalize_img(pre_img)  # imagenet normalization
         pre_img = np.transpose(pre_img, (2, 0, 1))
@@ -95,6 +97,8 @@ class SemanticChangeDetectionDatset(Dataset):
             pre_img, post_img, cd_label, t1_label, t2_label = imutils.random_fliplr_mcd(pre_img, post_img, cd_label, t1_label, t2_label)
             pre_img, post_img, cd_label, t1_label, t2_label = imutils.random_flipud_mcd(pre_img, post_img, cd_label, t1_label, t2_label)
             pre_img, post_img, cd_label, t1_label, t2_label = imutils.random_rot_mcd(pre_img, post_img, cd_label, t1_label, t2_label)
+            pre_img, post_img = imutils.random_color_jitter(pre_img, post_img)
+            pre_img, post_img = imutils.random_noise(pre_img, post_img)
 
         pre_img = imutils.normalize_img(pre_img)  # imagenet normalization
         pre_img = np.transpose(pre_img, (2, 0, 1))
@@ -159,6 +163,8 @@ class DamageAssessmentDatset(Dataset):
             pre_img, post_img, loc_label, clf_label = imutils.random_fliplr_bda(pre_img, post_img, loc_label, clf_label)
             pre_img, post_img, loc_label, clf_label = imutils.random_flipud_bda(pre_img, post_img, loc_label, clf_label)
             pre_img, post_img, loc_label, clf_label = imutils.random_rot_bda(pre_img, post_img, loc_label, clf_label)
+            pre_img, post_img = imutils.random_color_jitter(pre_img, post_img)
+            pre_img, post_img = imutils.random_noise(pre_img, post_img)
 
         pre_img = imutils.normalize_img(pre_img)  # imagenet normalization
         pre_img = np.transpose(pre_img, (2, 0, 1))

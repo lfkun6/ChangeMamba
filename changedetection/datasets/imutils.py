@@ -18,6 +18,52 @@ def normalize_img(img, mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.37
     
     return normalized_img
 
+
+def _to_uint8(img):
+    img = np.asarray(img)
+    if img.dtype != np.uint8:
+        img = np.clip(img, 0, 255).astype(np.uint8)
+    return img
+
+
+def _apply_color_jitter(img, brightness, contrast, color, sharpness):
+    pil_img = Image.fromarray(_to_uint8(img))
+    if brightness is not None:
+        pil_img = ImageEnhance.Brightness(pil_img).enhance(brightness)
+    if contrast is not None:
+        pil_img = ImageEnhance.Contrast(pil_img).enhance(contrast)
+    if color is not None:
+        pil_img = ImageEnhance.Color(pil_img).enhance(color)
+    if sharpness is not None:
+        pil_img = ImageEnhance.Sharpness(pil_img).enhance(sharpness)
+    return np.asarray(pil_img, dtype=np.float32)
+
+
+def random_color_jitter(pre_img, post_img, prob=0.5):
+    if random.random() > prob:
+        return pre_img, post_img
+
+    brightness = 1 + random.uniform(-0.2, 0.2)
+    contrast = 1 + random.uniform(-0.2, 0.2)
+    color = 1 + random.uniform(-0.2, 0.2)
+    sharpness = 1 + random.uniform(-0.1, 0.1)
+
+    pre_img = _apply_color_jitter(pre_img, brightness, contrast, color, sharpness)
+    post_img = _apply_color_jitter(post_img, brightness, contrast, color, sharpness)
+    return pre_img, post_img
+
+
+def random_noise(pre_img, post_img, prob=0.5, sigma=5.0):
+    if random.random() > prob:
+        return pre_img, post_img
+
+    def add_noise(img):
+        noise = np.random.normal(0, sigma, img.shape).astype(np.float32)
+        noisy = img.astype(np.float32) + noise
+        return np.clip(noisy, 0, 255)
+
+    return add_noise(pre_img), add_noise(post_img)
+
 def random_fliplr(pre_img, post_img, label):
     if random.random() > 0.5:
         label = np.fliplr(label)
